@@ -130,28 +130,8 @@ include("H_file/header.php");
 
                                                     </tr>
                                                 </thead>
-                                                <tbody class="studentdata">
-                                                    <tr>
-                                                        <td class="stud_id">1</td>
-                                                        <td>df</td>
-                                                        <td>ds</td>
-                                                        <td>sfd</td>
-                                                        <td>asd</td>
-                                                        <td>sdg</td>
+                                                <tbody class="studentdata" id="data">
 
-
-
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="stud_id">1</td>
-                                                        <td>df</td>
-                                                        <td>ds</td>
-                                                        <td>sfd</td>
-                                                        <td>asd</td>
-                                                        <td>sdg</td>
-
-
-                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -184,22 +164,39 @@ include("H_file/header.php");
     <script>
         // sorting data 
         $(document).ready(function() {
-            $('#example').DataTable({
-                "order": [
-                    [0, 'asc'],
-                    [1, 'desc']
-                ],
-                "lengthChange": false,
-                "paging": true,
-                stateSave: true,
-                "iDisplayLength": 10,
-                retrieve: true,
 
-                dom: 'Bfrtip',
-                buttons: [
-                    'csv', 'excel', 'pdf', 'print'
-                ]
-            });
+            loadData();
+
+            function loadData(squery) {
+                $.ajax({
+                    method: "POST",
+                    url: "action.php",
+                    data: {
+                        getReport: 1,
+                        byLocation: 1,
+                        squery: squery
+                    },
+                    success: function(response) {
+                        $("#data").html(response);
+                        $('#example').DataTable({
+                            "order": [
+                                [0, 'asc'],
+                                [1, 'desc']
+                            ],
+                            "lengthChange": false,
+                            "paging": true,
+                            stateSave: true,
+                            "iDisplayLength": 10,
+                            retrieve: true,
+
+                            dom: 'Bfrtip',
+                            buttons: [
+                                'csv', 'excel', 'pdf', 'print'
+                            ]
+                        });
+                    }
+                });
+            }
         });
         // sorting data end
     </script>

@@ -1819,3 +1819,34 @@ if (isset($_POST['getRowsMaint'])) {
     }
 }
 //End Asset_Detail_Maintenance Code
+
+// start report code
+
+// report by location start...
+if (isset($_POST['getReport'])) {
+    if (isset($_POST['byLocation'])) {
+
+        $output = "";
+        $sql = 'SELECT tbl_assets.picture, tbl_assets.asset_tag, tbl_assets.name, tbl_supplier.name "supplier", (SELECT name FROM tbl_loc_brands_dep_atype WHERE tbl_loc_brands_dep_atype.type=2 and tbl_loc_brands_dep_atype.id=tbl_assets.brand_id) "brand", (SELECT name FROM tbl_loc_brands_dep_atype WHERE tbl_loc_brands_dep_atype.type=1 and tbl_loc_brands_dep_atype.id=tbl_assets.location_id) "location" FROM tbl_assets JOIN tbl_supplier ON tbl_supplier.id = tbl_assets.supplier_id';
+        $statement = $pdo->query($sql);
+        $report_by_loc = $statement->fetchAll(PDO::FETCH_ASSOC);
+        if(!empty($report_by_loc)) {
+            foreach ($report_by_loc as $row) {
+                $output .= '<tr>
+                            <td><img src="asset_imgs/'.$row["picture"].'" style="border-radius: 50%; height:150px; width:150px"/></td>
+                            <td>' . $row["asset_tag"] . '</td>
+                            <td>'. $row["name"] .' </td>
+                            <td>'. $row["supplier"] .' </td>
+                            <td>'. $row["brand"] .' </td>
+                            <td>'. $row["location"] .' </td>
+                            </tr>';
+            }
+            echo $output;
+        } else {
+            
+        }
+    }
+}
+// report by location ends here...
+
+// end report code
